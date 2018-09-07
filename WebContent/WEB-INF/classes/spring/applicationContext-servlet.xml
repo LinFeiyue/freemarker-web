@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 开启mvc扫描 -->
+    <mvc:annotation-driven/>
+
+    <!-- 配置静态资源访问路径 -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:resources mapping="/error/**" location="/error/" />
+
+    <!-- base-package: 指定扫描的包路径，
+    use-default-filters="false"：说明不使用默认过滤器，则只会扫描到include-filter指定指定的注解 ,默认过滤器会扫描到所有的注解-->
+    <context:component-scan base-package="com.pache.framework.web.controller" use-default-filters="false">
+        <!-- 指定的类即@Controller注解指定的类 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!-- freemarker config -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!--配置页面路径-->
+        <property name="templateLoaderPath" value="/WEB-INF/freemarker/"/>
+        <!--配置属性-->
+        <property name="freemarkerSettings">
+            <props>
+                <!--这里的部分属性还不是很明白-->
+                <prop key="template_update_delay">1</prop>
+                <prop key="defaultEncoding">UTF-8</prop>
+                <prop key="url_escaping_charset">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="boolean_format">true,false</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="time_format">HH:mm:ss</prop>
+                <prop key="number_format">0.######</prop>
+                <prop key="whitespace_stripping">true</prop>
+            </props>
+        </property>
+        <!--设置一些常用的全局变量-->
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="repeatTag" value-ref="repeatTag"/>
+            </map>
+        </property>
+    </bean>
+    <!-- 自定义宏 ,可以通过如下方式，输出内容
+	    <@repeatTag count=3 hr=true>
+		  Test   
+		</@repeatTag> -->
+    <bean id="repeatTag" class="com.pache.framework.web.freemarker.RepeatDirective"></bean>
+
+    <!-- 配置视图解析器，当需要使用多种视图时，需要配置成资源束解析器 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+
+        <property name="cache" value="true" />
+        <property name="prefix" value="" />
+        <property name="suffix" value=".html" />
+        <property name="contentType" value="text/html; charset=UTF-8" />
+        <!--下面部分未知其具体作用-->
+        <property name="exposeRequestAttributes" value="false" />
+        <property name="exposeSessionAttributes" value="false" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="requestContextAttribute" value="request" />
+    </bean>
+
+</beans>
