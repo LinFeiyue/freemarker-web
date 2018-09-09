@@ -27,6 +27,7 @@
            http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
     <context:component-scan base-package="com.pache.*">
+        <!-- 不包括Controller注解 -->
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
     <!-- 引入属性文件 -->
@@ -39,7 +40,7 @@
    <!-- <import resource="applicationContext-hibernate.xml"/>-->
 
     <!-- 安全架构 -->
-  <!--  <import resource="spring-security.xml" />-->
+    <import resource="spring-security.xml" />
 
     <!--定时任务-->
     <!--业务类写在com.edi.framework.admin.task-->

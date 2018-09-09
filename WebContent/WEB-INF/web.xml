@@ -10,15 +10,20 @@
         <param-value>classpath:log4j.properties</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:spring/applicationContext.xml</param-value>
-    </context-param>
-    
+    <!--监听器配置开始-->
+    <!--配置文档加载监听器-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!--必须配置-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/applicationContext.xml</param-value>
+    </context-param>
+    <!--监听器配置结束-->
+
+    <!--处理器配置开始-->
     <servlet>
         <servlet-name>pache</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -28,10 +33,18 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    <!--将对所有资源都进拦截-->
     <servlet-mapping>
         <servlet-name>pache</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+    <!--处理器配置结束-->
+
     <welcome-file-list>
         <welcome-file>/index.jsp</welcome-file>
     </welcome-file-list>
