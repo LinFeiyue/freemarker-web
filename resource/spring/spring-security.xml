@@ -7,10 +7,28 @@
     <!-- 以下路径中的资源不用过滤 -->
     <http pattern="/login" security="none" />
 
+    <http name="basicAdminMgr"  auto-config="false" access-denied-page="/error/noAuthority.htm" use-expressions="true" entry-point-ref="authenticationEntryPoint">
+        <!--判断session是否过期以及更新罪行访问时间-->
+        <custom-filter ref="concurrentSessionFilter" position="CONCURRENT_SESSION_FILTER" />
+
+        <!--<custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />-->
+
+    </http>
+
     <!-- 登录入口 -->
     <beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/login" />
     </beans:bean>
+
+    <!-- 判断session是否过期以及更新最新访问时间 -->
+    <beans:bean id="concurrentSessionFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <beans:property name="sessionRegistry" ref="sessionRegistry" />
+        <beans:property name="expiredUrl" value="/login" />
+    </beans:bean>
+    <!-- session注册器 -->
+    <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+    <!--验证码过滤器-->
 
     <!--过滤器配置（暂时搁置）-->
     <!--<beans:bean id="myFilter" class="com.pache.framework.web.security.filter.CustomSecurityFilter">-->
